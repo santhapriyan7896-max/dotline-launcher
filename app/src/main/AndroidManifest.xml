@@ -1,0 +1,290 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <!-- Lets the launcher open the system "Uninstall app?" dialog. -->
+    <uses-permission android:name="android.permission.REQUEST_DELETE_PACKAGES" />
+    <!-- Lets the Wi-Fi tile show whether Wi-Fi is on. -->
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
+    <!-- Phone app: place calls, show recent calls and contacts, call notifications. -->
+    <uses-permission android:name="android.permission.CALL_PHONE" />
+    <uses-permission android:name="android.permission.READ_CALL_LOG" />
+    <uses-permission android:name="android.permission.READ_CONTACTS" />
+    <uses-permission android:name="android.permission.READ_PHONE_STATE" />
+    <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
+    <uses-permission android:name="android.permission.USE_FULL_SCREEN_INTENT" />
+    <!-- Turns the screen off when the phone is at your ear during a call. -->
+    <uses-permission android:name="android.permission.WAKE_LOCK" />
+
+    <!-- Messages app: read and send texts (Google Messages stays the default SMS app). -->
+    <uses-permission android:name="android.permission.READ_SMS" />
+    <uses-permission android:name="android.permission.SEND_SMS" />
+
+    <!-- Clock app: ring alarms and timers on time, also after a restart. -->
+    <uses-permission android:name="android.permission.USE_EXACT_ALARM" />
+    <uses-permission
+        android:name="android.permission.SCHEDULE_EXACT_ALARM"
+        android:maxSdkVersion="32" />
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
+    <uses-permission android:name="android.permission.VIBRATE" />
+
+    <!-- Lets Settings set a Nothing-style lock screen wallpaper (only when you tap the button). -->
+    <uses-permission android:name="android.permission.SET_WALLPAPER" />
+
+    <!-- Home tiles: weather (internet + rough location), next calendar event. -->
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+    <uses-permission android:name="android.permission.READ_CALENDAR" />
+
+    <!-- Lets the Bluetooth pill show whether Bluetooth is on (older Android versions). -->
+    <uses-permission
+        android:name="android.permission.BLUETOOTH"
+        android:maxSdkVersion="30" />
+    <!-- Lets the "System" button open the phone's own notification panel. -->
+    <uses-permission android:name="android.permission.EXPAND_STATUS_BAR" />
+
+    <!-- Android 11+ hides other apps unless we say which ones we need to see. -->
+    <queries>
+        <intent>
+            <action android:name="android.intent.action.MAIN" />
+            <category android:name="android.intent.category.LAUNCHER" />
+        </intent>
+        <intent>
+            <action android:name="android.media.action.STILL_IMAGE_CAMERA" />
+        </intent>
+        <intent>
+            <action android:name="android.intent.action.DIAL" />
+        </intent>
+        <intent>
+            <action android:name="android.intent.action.VIEW" />
+            <data android:scheme="https" />
+        </intent>
+    </queries>
+
+    <application
+        android:icon="@mipmap/ic_launcher"
+        android:label="@string/app_name"
+        android:supportsRtl="true"
+        android:theme="@style/Theme.Launcher">
+
+        <activity
+            android:name=".MainActivity"
+            android:clearTaskOnLaunch="true"
+            android:configChanges="orientation|screenSize|screenLayout|smallestScreenSize|keyboard|keyboardHidden|navigation|uiMode"
+            android:excludeFromRecents="true"
+            android:exported="true"
+            android:launchMode="singleTask"
+            android:resumeWhilePausing="true"
+            android:stateNotNeeded="true"
+            android:windowSoftInputMode="adjustResize|stateHidden">
+
+            <!-- Shows up in the app list, handy while developing. -->
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+
+            <!-- Makes this app selectable as the phone's home screen. -->
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.HOME" />
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
+
+        <!-- Messages app. Also offered when you tap an "sms:" link. -->
+        <activity
+            android:name=".messages.MessagesActivity"
+            android:exported="true"
+            android:icon="@mipmap/ic_messages"
+            android:label="Messages"
+            android:launchMode="singleTask"
+            android:taskAffinity="com.applauncher.messages"
+            android:theme="@style/Theme.Phone"
+            android:windowSoftInputMode="adjustResize">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+            <intent-filter>
+                <action android:name="android.intent.action.SENDTO" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <data android:scheme="sms" />
+                <data android:scheme="smsto" />
+            </intent-filter>
+        </activity>
+
+        <!-- Shows a message if a text fails to send. -->
+        <receiver
+            android:name=".messages.SmsSentReceiver"
+            android:exported="false" />
+
+        <!-- Dot lock screen, shown on top of the phone's own (still locked) lock screen. -->
+        <activity
+            android:name=".lock.LockScreenActivity"
+            android:excludeFromRecents="true"
+            android:exported="false"
+            android:launchMode="singleInstance"
+            android:screenOrientation="portrait"
+            android:showWhenLocked="true"
+            android:taskAffinity="com.applauncher.lock"
+            android:theme="@style/Theme.Phone" />
+
+        <!-- Clock app: alarms, timer, stopwatch, world clock. -->
+        <activity
+            android:name=".clock.ClockActivity"
+            android:exported="true"
+            android:icon="@mipmap/ic_clock"
+            android:label="Clock"
+            android:launchMode="singleTask"
+            android:taskAffinity="com.applauncher.clock"
+            android:theme="@style/Theme.Phone">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+
+        <!-- Alarm / timer ringing screen, shown over the lock screen. -->
+        <activity
+            android:name=".clock.RingActivity"
+            android:excludeFromRecents="true"
+            android:exported="false"
+            android:launchMode="singleInstance"
+            android:screenOrientation="portrait"
+            android:showWhenLocked="true"
+            android:taskAffinity="com.applauncher.ring"
+            android:theme="@style/Theme.Phone"
+            android:turnScreenOn="true" />
+
+        <!-- Rings alarms and timers; puts alarms back after a restart or time change. -->
+        <receiver
+            android:name=".clock.ClockReceiver"
+            android:exported="false">
+            <intent-filter>
+                <action android:name="android.intent.action.BOOT_COMPLETED" />
+                <action android:name="android.intent.action.TIME_SET" />
+                <action android:name="android.intent.action.TIMEZONE_CHANGED" />
+                <action android:name="android.intent.action.MY_PACKAGE_REPLACED" />
+            </intent-filter>
+        </receiver>
+
+        <!-- Calculator. -->
+        <activity
+            android:name=".calculator.CalculatorActivity"
+            android:exported="true"
+            android:icon="@mipmap/ic_calculator"
+            android:label="Calculator"
+            android:launchMode="singleTask"
+            android:taskAffinity="com.applauncher.calculator"
+            android:theme="@style/Theme.Phone">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+
+        <!-- Charging animation (on home and the lock screen). -->
+        <activity
+            android:name=".lock.ChargingActivity"
+            android:excludeFromRecents="true"
+            android:exported="false"
+            android:launchMode="singleInstance"
+            android:screenOrientation="portrait"
+            android:showWhenLocked="true"
+            android:taskAffinity="com.applauncher.charging"
+            android:theme="@style/Theme.Phone" />
+
+        <!-- Launcher settings. -->
+        <activity
+            android:name=".SettingsActivity"
+            android:exported="false"
+            android:label="Launcher settings"
+            android:taskAffinity="com.applauncher.settings"
+            android:theme="@style/Theme.Phone" />
+
+        <!-- Phone app: keypad, recents, contacts. The DIAL filters let it be the default phone app. -->
+        <activity
+            android:name=".phone.DialerActivity"
+            android:exported="true"
+            android:icon="@mipmap/ic_phone"
+            android:label="Phone"
+            android:launchMode="singleTask"
+            android:taskAffinity="com.applauncher.phone"
+            android:theme="@style/Theme.Phone"
+            android:windowSoftInputMode="adjustResize">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+            <intent-filter>
+                <action android:name="android.intent.action.DIAL" />
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+            <intent-filter>
+                <action android:name="android.intent.action.DIAL" />
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+                <data android:scheme="tel" />
+            </intent-filter>
+        </activity>
+
+        <!-- Call screen: incoming, outgoing and ongoing calls. Shows over the lock screen. -->
+        <activity
+            android:name=".phone.InCallActivity"
+            android:excludeFromRecents="true"
+            android:exported="false"
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait"
+            android:showWhenLocked="true"
+            android:taskAffinity="com.applauncher.incall"
+            android:theme="@style/Theme.Phone"
+            android:turnScreenOn="true" />
+
+        <!-- Android hands calls to this service while Dotline is the default phone app. -->
+        <service
+            android:name=".phone.CallService"
+            android:exported="true"
+            android:permission="android.permission.BIND_INCALL_SERVICE">
+            <meta-data
+                android:name="android.telecom.IN_CALL_SERVICE_UI"
+                android:value="true" />
+            <meta-data
+                android:name="android.telecom.IN_CALL_SERVICE_RINGING"
+                android:value="false" />
+            <intent-filter>
+                <action android:name="android.telecom.InCallService" />
+            </intent-filter>
+        </service>
+
+        <!-- Decline / Hang up buttons on call notifications. -->
+        <receiver
+            android:name=".phone.CallActionReceiver"
+            android:exported="false" />
+
+        <!-- Turned on by the user under "Notification access" so the music tile can see what's playing. -->
+        <service
+            android:name=".system.MediaListenerService"
+            android:exported="true"
+            android:label="@string/app_name"
+            android:permission="android.permission.BIND_NOTIFICATION_LISTENER_SERVICE">
+            <intent-filter>
+                <action android:name="android.service.notification.NotificationListenerService" />
+            </intent-filter>
+        </service>
+
+        <!-- Turned on by the user under Accessibility; only used for double-tap to lock. -->
+        <service
+            android:name=".system.LockService"
+            android:exported="true"
+            android:label="@string/app_name"
+            android:permission="android.permission.BIND_ACCESSIBILITY_SERVICE">
+            <intent-filter>
+                <action android:name="android.accessibilityservice.AccessibilityService" />
+            </intent-filter>
+            <meta-data
+                android:name="android.accessibilityservice"
+                android:resource="@xml/lock_service" />
+        </service>
+    </application>
+</manifest>

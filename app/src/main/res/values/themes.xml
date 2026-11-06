@@ -1,0 +1,18 @@
+<resources>
+    <style name="Theme.Launcher" parent="android:Theme.Material.NoActionBar">
+        <!-- Android only uses its "back to home" transitions for windows that show the wallpaper.
+             Without it, closing an app slides sideways like switching apps. The home screen still
+             paints solid black on top, so the wallpaper itself isn't visible. -->
+        <item name="android:windowShowWallpaper">true</item>
+        <item name="android:windowBackground">@android:color/transparent</item>
+        <item name="android:statusBarColor">@android:color/transparent</item>
+        <item name="android:navigationBarColor">@android:color/transparent</item>
+    </style>
+
+    <!-- Phone and call screens: solid black, no wallpaper. -->
+    <style name="Theme.Phone" parent="android:Theme.Material.NoActionBar">
+        <item name="android:windowBackground">@android:color/black</item>
+        <item name="android:statusBarColor">@android:color/transparent</item>
+        <item name="android:navigationBarColor">@android:color/transparent</item>
+    </style>
+</resources>

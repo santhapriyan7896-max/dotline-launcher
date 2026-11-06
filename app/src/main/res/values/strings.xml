@@ -1,0 +1,4 @@
+<resources>
+    <string name="app_name">Dotline</string>
+    <string name="lock_service_description">Lets you double-tap an empty part of the home screen to turn the screen off, and shows the Dot lock screen if you turn it on in Launcher settings. It does not read anything on your screen.</string>
+</resources>
